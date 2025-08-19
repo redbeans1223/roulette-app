@@ -1,23 +1,16 @@
 import logo from './logo.svg';
+import SectionForm from './components/SectionForm';
 import './App.css';
+import './index.css';
 
 function App() {
+  const handleFormSubmit = ({ sectionCount, sectionType}) => {
+    console.log(`セクション数： ${sectionCount}, 形式： ${sectionType}`);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='bg-gray-100 flex flex-col items-center justify-center min-h-screen'>
+      <h1 className='text-3xl font-bold mb-4'>ルーレットアプリ</h1>
+      <SectionForm onSubmit={handleFormSubmit}/>
     </div>
   );
 }
