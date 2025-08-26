@@ -11,7 +11,7 @@ const RouletteWheel = ({sections}) => {
         const width = 300;
         const height = 300;
         canvas.width = width;
-        canvas.heigth = height;
+        canvas.height = height;
         const centerX = width / 2;
         const centerY = height / 2;
         const radius = width / 2 - 10;
@@ -30,7 +30,7 @@ const RouletteWheel = ({sections}) => {
 
             // テキスト描画
             ctx.save();
-            ctx.transelate(centerX, centerY);
+            ctx.translate(centerX, centerY);
             ctx.rotate(startAngle + angle / 2);
             ctx.fillStyle = 'white';
             ctx.font = '14px Arial';
