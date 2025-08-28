@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const RouletteWheel = ({sections}) => {
+const RouletteWheel = ({sections, rotation, colors}) => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
@@ -8,14 +8,12 @@ const RouletteWheel = ({sections}) => {
         const ctx = canvas.getContext('2d');
         const { count, type, labels } = sections;
 
-        const width = 300;
-        const height = 300;
-        canvas.width = width;
-        canvas.height = height;
-        const centerX = width / 2;
-        const centerY = height / 2;
-        const radius = width / 2 - 10;
-
+        const width = 300; const height = 300;
+        canvas.width = width; canvas.height = height;
+        const centerX = width / 2; const centerY = height / 2; const radius = width / 2 - 10;
+        ctx.translate(centerX, centerY);
+        ctx.rotate(rotation || 0);
+        ctx.translate(-centerX, -centerY);        
         const angle = (2 * Math.PI) / count;
         for (let i = 0; i < count; i++) {
             const startAngle = i * angle;
@@ -25,7 +23,7 @@ const RouletteWheel = ({sections}) => {
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, startAngle, endAngle);
             ctx.lineTo(centerX, centerY);
-            ctx.fillStyle = `hsl(${Math.random() * 360}, 50%, 50%)`;
+            ctx.fillStyle = colors[i] || `hsl(${i * (360 / count) }, 80%, ${i % 2 === 0 ? 40 : 60}%)`;
             ctx.fill();
 
             // テキスト描画
@@ -39,7 +37,7 @@ const RouletteWheel = ({sections}) => {
             ctx.fillText(text, radius -30, 0);
             ctx.restore();
         }
-    }, [sections]);
+    }, [sections, colors, rotation]);
     return <canvas ref={canvasRef} className="mt-4"/>
 };
 
