@@ -23,7 +23,7 @@ const RouletteWheel = ({sections, rotation, colors}) => {
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, startAngle, endAngle);
             ctx.lineTo(centerX, centerY);
-            ctx.fillStyle = colors[i] || `hsl(${i * (360 / count) }, 80%, ${i % 2 === 0 ? 40 : 60}%)`;
+            ctx.fillStyle = colors[i] || `hsl(${i * (720 / sections.count) }, 80%, 50%)`; // `hsl(${i * (360 / count) }, 80%, ${i % 2 === 0 ? 40 : 60}%)`;
             ctx.fill();
 
             // テキスト描画

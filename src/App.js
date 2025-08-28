@@ -14,7 +14,7 @@ const App = () => {
   const [colors, setColors] = useState([]);
 
   useEffect(() => {
-      setColors(Array(sections.count).fill().map(( _, i) => `hsl(${Math.random() * 360}, 50%, 50%)`));
+      setColors(Array(sections.count).fill().map(( _, i) => `hsl(${i * (720 / sections.count) }, 80%, 50%)`));
   }, [sections.count]);
   
   const handleFormSubmit = async ({ sectionCount, sectionType, labels}) => {
