@@ -12,9 +12,32 @@ const App = () => {
   const [rotation, setRotation] = useState(0);
   const rotationRef = useRef(rotation);
   const [colors, setColors] = useState([]);
-
+  
   useEffect(() => {
-      setColors(Array(sections.count).fill().map(( _, i) => `hsl(${i * (720 / sections.count) }, 80%, 50%)`));
+    const palette = [
+      '#D32F2F', // 赤
+      '#388E3C', // 緑
+      '#0288D1', // 青
+      '#FBC02D', // 黄
+      '#7B1FA2', // 紫
+      '#FF4081', // ピンク
+      '#00ACC1', // シアン
+      '#F57C00', // オレンジ
+      '#6D4C41', // ブラウン
+      '#689F38', // ライム
+      '#1976D2', // 濃青
+      '#FFA000', // アンバー
+      '#512DA8', // 濃紫
+      '#E91E63', // 濃ピンク
+      '#26A69A', // ティール
+      '#EF5350', // ライト赤
+      '#2E7D32', // 濃緑
+      '#039BE5', // ライト青
+      '#FFB300', // ライト黄
+      '#673AB7'  // ディープパープル
+    ];
+    
+    setColors(Array(sections.count).fill().map(( _, i) => palette[i % palette.length]));
   }, [sections.count]);
   
   const handleFormSubmit = async ({ sectionCount, sectionType, labels}) => {
@@ -57,10 +80,7 @@ const App = () => {
         rotationRef.current = progress * targetRotation;
         setRotation(rotationRef.current);
         if (progress < 1) {
-          setRotation(progress * targetRotation);
           requestAnimationFrame(animate);
-        } else {
-          setRotation(targetRotation);
         }
       };
       requestAnimationFrame(animate);

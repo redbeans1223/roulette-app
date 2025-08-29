@@ -11,32 +11,47 @@ const RouletteWheel = ({sections, rotation, colors}) => {
         const width = 300; const height = 300;
         canvas.width = width; canvas.height = height;
         const centerX = width / 2; const centerY = height / 2; const radius = width / 2 - 10;
+        ctx.save();
         ctx.translate(centerX, centerY);
         ctx.rotate(rotation || 0);
-        ctx.translate(-centerX, -centerY);        
+        ctx.translate(-centerX, -centerY);
         const angle = (2 * Math.PI) / count;
+        
         for (let i = 0; i < count; i++) {
             const startAngle = i * angle;
             const endAngle = (i + 1) * angle;
 
             // セクション描画
+            ctx.save();
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, startAngle, endAngle);
             ctx.lineTo(centerX, centerY);
-            ctx.fillStyle = colors[i] || `hsl(${i * (720 / sections.count) }, 80%, 50%)`; // `hsl(${i * (360 / count) }, 80%, ${i % 2 === 0 ? 40 : 60}%)`;
+            ctx.fillStyle = colors[i];
             ctx.fill();
-
+            ctx.restore();
             // テキスト描画
             ctx.save();
             ctx.translate(centerX, centerY);
             ctx.rotate(startAngle + angle / 2);
+            ctx.rotate(-(startAngle + angle / 2));
             ctx.fillStyle = 'white';
-            ctx.font = '14px Arial';
+            
+            ctx.font = type == 'number' ? '22px Arial' : '14px Arial';
             ctx.textAlign = "center";
             const text = type == 'number' ? String(i + 1) : labels[i] || `セクション${i + 1}`;
-            ctx.fillText(text, radius -30, 0);
-            ctx.restore();
+            ctx.fillText(text, radius -90, 0);
+            ctx.restore();  
         }
+        // インジケータの描画
+        ctx.restore();
+        ctx.beginPath();
+        ctx.moveTo(-10, -radius - 5);
+        ctx.lineTo(10, -radius - 5);
+        ctx.lineTo(0, -radius + 5);
+        ctx.closePath();
+        ctx.fillStyle = "white";
+        ctx.fill();
+        
     }, [sections, colors, rotation]);
     return <canvas ref={canvasRef} className="mt-4"/>
 };
