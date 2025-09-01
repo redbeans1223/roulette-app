@@ -12,7 +12,8 @@
     const [rotation, setRotation] = useState(0);
     const rotationRef = useRef(rotation);
     const [colors, setColors] = useState([]);
-    
+    const [isSpinning, setIsSpinning] = useState(false);
+
     useEffect(() => {
       const palette = [
         '#D32F2F', // 赤
@@ -61,13 +62,18 @@
     };
     
     const handleSpin = async () => {
+      if (isSpinning) return;
+      setIsSpinning(true);
+      setResult(null);
       try {
         const response = await fetch("http://localhost:8080/api/spin", { method: 'GET' });
         const data = await response.json();
+        
         if (!response.ok) {
           setError(data.error);
           return;
         }
+        
         setResult(data.result);
         setError(null);
         // 回転アニメーション
@@ -81,6 +87,9 @@
           setRotation(rotationRef.current);
           if (progress < 1) {
             requestAnimationFrame(animate);
+          } else {
+            setResult(data.result);
+            setIsSpinning(false);
           }
         };
         requestAnimationFrame(animate);
