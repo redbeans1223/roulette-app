@@ -1,3 +1,3 @@
-com\example\roulette_backend\RouletteController.class
-com\example\roulette_backend\RouletteSettings.class
-com\example\roulette_backend\RouletteBackendApplication.class
+com\example\roulette\RouletteBackendApplication.class
+com\example\roulette\RouletteController.class
+com\example\roulette\RouletteSettings.class
