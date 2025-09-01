@@ -109,6 +109,8 @@
         }
         setError(null);
         setSections({ count: 8, type: 'number', labels: null});
+        setRotation(0);
+        setResult(null);
       } catch(e) {
         setError('サーバーエラー');
       }
