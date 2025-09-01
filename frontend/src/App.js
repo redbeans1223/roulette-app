@@ -83,8 +83,8 @@
         const animate = (timestamp) => {
           if(!start) start = timestamp;
           const progress = Math.sin(Math.min((timestamp - start)  / duration, 1) ** 0.5 * (Math.PI / 2));
-          rotationRef.current = progress * targetRotation;
-          setRotation(rotationRef.current);
+          
+          setRotation(progress * targetRotation);
           if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
@@ -128,7 +128,12 @@
         <button onClick={handleReset} className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4'>
           リセット
         </button>
-        {result && <div className='mt-4 text-lg'>結果: {result}</div>}
+        <div className='mt-4 text-lg'>
+          結果:
+          {result && isSpinning === false && (
+            sections.type === 'number' ? '　' + result : sections.labels ? '　' + sections.labels[parseInt(result) - 1]: '　' + result
+          )}
+        </div>
       </div>
     );
   };
