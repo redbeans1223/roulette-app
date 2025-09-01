@@ -1,4 +1,4 @@
-package com.example.roulette_backend;
+package com.example.roulette;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

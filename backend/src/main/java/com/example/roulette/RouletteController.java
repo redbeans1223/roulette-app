@@ -1,4 +1,4 @@
-package com.example.roulette_backend;
+package com.example.roulette;
 import java.util.List;
 import java.util.Map;
 
