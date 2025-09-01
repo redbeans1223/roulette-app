@@ -15,12 +15,10 @@ const RouletteWheel = ({sections, rotation, colors}) => {
         ctx.translate(centerX, centerY);
         ctx.rotate(rotation || 0);
         ctx.translate(-centerX, -centerY);
-        const angle = (2 * Math.PI) / count;
-        
+        const angle = (2 * Math.PI) / count; // count=8 なら angle = 0.785398163（ラジアン） で 一つの円弧の円周でもある
         for (let i = 0; i < count; i++) {
             const startAngle = i * angle;
             const endAngle = (i + 1) * angle;
-
             // セクション描画
             ctx.save();
             ctx.beginPath();
@@ -32,8 +30,8 @@ const RouletteWheel = ({sections, rotation, colors}) => {
             // テキスト描画
             ctx.save();
             ctx.translate(centerX, centerY);
-            ctx.rotate(startAngle + angle / 2);
-            ctx.rotate(-(startAngle + angle / 2));
+            // ctx.rotate(startAngle + angle / 2);
+            // ctx.rotate(-(startAngle + angle / 2));
             ctx.fillStyle = 'white';
             
             ctx.font = type == 'number' ? '22px Arial' : '14px Arial';
