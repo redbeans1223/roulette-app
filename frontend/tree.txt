@@ -1,0 +1,63 @@
+フォルダー パスの一覧
+ボリューム シリアル番号は 903A-9E90 です
+C:.
+│  .gitignore
+│  README.md
+│  tree.txt
+│  
+├─backend
+│  │  .gitattributes
+│  │  .gitignore
+│  │  HELP.md
+│  │  mvnw
+│  │  mvnw.cmd
+│  │  pom.xml
+│  │  
+│  ├─.git
+│  │          
+│  ├─src
+│  │  ├─main
+│  │  │  ├─java
+│  │  │  │  └─com
+│  │  │  │      └─example
+│  │  │  │          └─roulette_backend
+│  │  │  │                  RouletteBackendApplication.java
+│  │  │  │                  RouletteController.java
+│  │  │  │                  RouletteSettings.java
+│  │  │  │                  
+│  │  │  └─resources
+│  │  │      │  application.properties
+│  │  │      │  
+│  │  │      ├─static
+│  │  │      └─templates
+│                          
+└─frontend
+    │  .gitignore
+    │  package-lock.json
+    │  package.json
+    │  README.md
+    │  tailwind.config.js
+    │  
+    │          
+    ├─public
+    │      favicon.ico
+    │      index.html
+    │      logo192.png
+    │      logo512.png
+    │      manifest.json
+    │      robots.txt
+    │      
+    └─src
+        │  App.css
+        │  App.js
+        │  App.test.js
+        │  index.css
+        │  index.js
+        │  logo.svg
+        │  reportWebVitals.js
+        │  setupTests.js
+        │  
+        └─components
+                RouletteWheel.js
+                SectionForm.js
+                
