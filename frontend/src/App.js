@@ -4,7 +4,7 @@
   import './App.css';
   import './index.css';
   import React from 'react';
-  import { Roultes, Roulte} from 'react-router-dom';
+  import { Routes, Route} from 'react-router-dom';
   import { RoulettProvider } from './context/RouletteContext';
   import RouletteScreen from './RouletteScreen';
   import SettingsScreen from './SettingsScreen';

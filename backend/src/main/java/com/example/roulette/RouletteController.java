@@ -43,12 +43,8 @@ public class RouletteController {
             return ResponseEntity.badRequest().body(Map.of("error", "設定がありません"));
         }
         Integer count = settings.getCount();
-        String type = settings.getType();
-        List<String> labels = settings.getLabels();
         int index = (int) (Math.random() * count);
-        String result = type.equals("number") ? String.valueOf(index + 1) : labels.get(index);
-
-        return ResponseEntity.ok(Map.of("result", result));
+        return ResponseEntity.ok(Map.of("result", index));
     }
 
     @DeleteMapping("/reset")
