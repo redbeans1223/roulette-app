@@ -10,6 +10,7 @@ export const RoulettProvider = ({ children }) => {
     const rotationRef = useRef(rotation);
     const [colors, setColors] = useState([]);
     const [isSpinning, setIsSpinning] = useState(false);
+    const lastClickTimeRef = useRef(0);
 
     useEffect(() => {
         const palette = [
@@ -20,6 +21,10 @@ export const RoulettProvider = ({ children }) => {
         ];
         setColors(Array(sections.count).fill().map((_, i) => palette[i % palette.length]));
    }, [sections.count]);
+    const playClickSound = () => {
+      const audio = new Audio('/sounds/click.mp3');
+      audio.play().catch(e => console.error('音声エラー：', e));
+    }
     const handleFormSubmit = async ({ sectionCount, sectionType, labels}) => {
       try {
         const response = await fetch("http://localhost:8080/api/sections", {
@@ -50,20 +55,26 @@ export const RoulettProvider = ({ children }) => {
         
         if (!response.ok) {
           setError(data.error);
+          setIsSpinning(false);
           return;
         }
         
-        setResult(data.result);
         setError(null);
         // 回転アニメーション
         let start = null;
         const duration = 5000;
-        const targetRotation = (-(parseInt(data.result) - 1) * (2 * Math.PI / sections.count)) - (Math.PI / 2) + (8 * Math.PI);
+        const targetRotation = (-(parseInt(data.result) - 1) * (2 * Math.PI / sections.count)) - (Math.PI / 2) + (16 * Math.PI);
         const animate = (timestamp) => {
           if(!start) start = timestamp;
           const progress = Math.sin(Math.min((timestamp - start)  / duration, 1) ** 0.5 * (Math.PI / 2));
           
           setRotation(progress * targetRotation);
+          // 回転音（セクション通過ごと）
+          const clickInterval = duration / sections.count / 4;
+          if (timestamp - lastClickTimeRef.current > clickInterval) {
+            playClickSound();
+            lastClickTimeRef.current = timestamp;
+          }
           if (progress < 1) {
             requestAnimationFrame(animate);
           } else {

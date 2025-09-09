@@ -1,11 +1,15 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import RouletteWheel from './components/RouletteWheel';
 import { RoulettContext } from './context/RouletteContext';
 
 const RouletteScreen = () => {
     const { error, result, sections, rotation, colors, isSpinning, handleSpin, handleReset } = useContext(RoulettContext);
-
+    const navigate = useNavigate();
+    const handleResetAndNavigate = async () => {
+        await handleReset();
+        navigate('/');
+    }
     return (
         <div className='bg-gray-100 flex flex-col items-center justify-center min-h-screen'>
             <div className='fixed top-0 w-full h-12 bg-red-100 text-red-700 flex item-center justify-center'>
@@ -21,7 +25,7 @@ const RouletteScreen = () => {
                 ルーレットを回す
             </button>
             <button
-                onClick={handleReset}
+                onClick={handleResetAndNavigate}
                 className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 disable:bg-gray-400'
             >
                 リセット
@@ -31,7 +35,7 @@ const RouletteScreen = () => {
                     sections.type === 'number' ? ' ' + result : sections.labels ? ' ' + sections.labels[parseInt(result) - 1] : ' ' + result
                 )}
             </div>
-            <Link to="/" className='mt-4 text-blue-500'>設定画面へ</Link>
+            
         </div>
     );
 };
