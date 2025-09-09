@@ -7,10 +7,9 @@ export const RoulettProvider = ({ children }) => {
     const [result, setResult] = useState(null);
     const [sections, setSections] = useState({ count: 8, type: "number", labels: null});
     const [rotation, setRotation] = useState(0);
-    const rotationRef = useRef(rotation);
     const [colors, setColors] = useState([]);
     const [isSpinning, setIsSpinning] = useState(false);
-    const lastClickTimeRef = useRef(0);
+    const lastProgressRef = useRef(0);
 
     useEffect(() => {
         const palette = [
@@ -46,6 +45,7 @@ export const RoulettProvider = ({ children }) => {
     };
     
     const handleSpin = async () => {
+      const spinCounts = 16;
       if (isSpinning) return;
       setIsSpinning(true);
       setResult(null);
@@ -58,33 +58,52 @@ export const RoulettProvider = ({ children }) => {
           setIsSpinning(false);
           return;
         }
-        
+        const index = Number(data.result);
+        if (isNaN(index) || index < 1 || index > sections.count) {
+          setError('無効な結果：', data.result);
+          setIsSpinning(false);
+          return;
+        }
         setError(null);
         // 回転アニメーション
         let start = null;
         const duration = 5000;
-        const targetRotation = (-(parseInt(data.result) - 1) * (2 * Math.PI / sections.count)) - (Math.PI / 2) + (16 * Math.PI);
+        const targetRotation = (-(index - 1) * (2 * Math.PI / sections.count)) - (Math.PI / 2) + (spinCounts * Math.PI);
+        const clickFrequency = sections.count * spinCounts;
+        const baseInterval = duration / clickFrequency; // 音の基本間隔
+        lastProgressRef.current = 0;
+        playClickSound();
         const animate = (timestamp) => {
-          if(!start) start = timestamp;
-          const progress = Math.sin(Math.min((timestamp - start)  / duration, 1) ** 0.5 * (Math.PI / 2));
-          
-          setRotation(progress * targetRotation);
+          if(!start) {
+            start = timestamp;
+            
+          } 
+          const elapsed = timestamp - start;
+          const progress = Math.sin(Math.min(elapsed / duration, 1) ** 0.5 * (Math.PI / 2));
+          const currentRotation = progress * targetRotation;
+          setRotation(currentRotation);
+          const speedFactor = Math.cos(Math.min(elapsed / duration, 1) ** 0.5 * (Math.PI / 2)) + 0.2;
+          const dynamicInterval = baseInterval / (speedFactor + 0.1);
+          const passedProgress = Math.floor(elapsed / dynamicInterval);
+          const lastPassedProgress = Math.floor(lastProgressRef.current / dynamicInterval);
+
           // 回転音（セクション通過ごと）
-          const clickInterval = duration / sections.count / 4;
-          if (timestamp - lastClickTimeRef.current > clickInterval) {
+          if (passedProgress > lastPassedProgress ) {
             playClickSound();
-            lastClickTimeRef.current = timestamp;
+            lastProgressRef.current = elapsed;
           }
+          
           if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
-            setResult(data.result);
+            setResult(index);
             setIsSpinning(false);
           }
         };
         requestAnimationFrame(animate);
       } catch (e) {
         setError('サーバーエラー');
+        setIsSpinning(false);
       }
     };
     const handleReset = async () => {
@@ -101,8 +120,10 @@ export const RoulettProvider = ({ children }) => {
         setSections({ count: 8, type: 'number', labels: null});
         setRotation(0);
         setResult(null);
+        setIsSpinning(false);
       } catch(e) {
         setError('サーバーエラー');
+        setIsSpinning(false);
       }
     };
     return (
