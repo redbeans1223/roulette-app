@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const SectionForm = ({onSubmit}) => {
     const [sectionCount, setSectionCount] = useState(8);
     const [sectionType, setSectionType] = useState("number");
     const [labels, setLabels] = useState([]);
-
+    const navigate = useNavigate();
     // onSubmitに結果を返す処理
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault(); // デフォルトでリロードするのを抑制
-        onSubmit({sectionCount, sectionType, labels});
+        try {
+            await onSubmit({ sectionCount, sectionType, labels});
+            navigate('/roulette');
+        } catch (e) {
+            console.e('フォーム送信エラー: ', e);
+        }
+        
     };
 
     return (
