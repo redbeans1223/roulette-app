@@ -10,7 +10,7 @@ const SettingsScreen = () => {
         <div className='bg-gray-100 flex flex-col items-center justify-center min-h-screen'>
             <h1 className='text-3xl font-bold mb-4 mt-16'>設定画面</h1>
             <SectionForm onSubmit={handleFormSubmit} />
-            <Link to="/" className='mt-4 text-blue-500'>ルーレット画面へ</Link>
+            <Link to="/roulette" className='mt-4 text-blue-500'>ルーレット画面へ</Link>
         </div>
     );
 };

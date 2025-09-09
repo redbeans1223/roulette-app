@@ -13,8 +13,9 @@
     return (
       <RoulettProvider>
         <Routes>
-          <Route path="/" element={<RouletteScreen />} />
-          <Route path="/settings" element={<SettingsScreen />} />
+          <Route path="/" element={<SettingsScreen />} />
+          <Route path="/roulette" element={<RouletteScreen />} />
+          
         </Routes>
       </RoulettProvider>
     );

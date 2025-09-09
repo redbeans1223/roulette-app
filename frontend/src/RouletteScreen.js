@@ -12,7 +12,7 @@ const RouletteScreen = () => {
                 {error ? error: ' '}
             </div>
             <h1 className='text-3xl font-bold mb-4 mt-16'>ルーレットアプリ</h1>
-            <RouletteWheel sections={sections} rotation={rotation} colors={colors} />
+            <RouletteWheel sections={sections} rotation={rotation} colors={colors} isSpinning={isSpinning}/>
             <button
                 onClick={handleSpin}
                 disabled={isSpinning}
@@ -31,7 +31,7 @@ const RouletteScreen = () => {
                     sections.type === 'number' ? ' ' + result : sections.labels ? ' ' + sections.labels[parseInt(result) - 1] : ' ' + result
                 )}
             </div>
-            <Link to="/settings" className='mt-4 text-blue-500'>設定画面へ</Link>
+            <Link to="/" className='mt-4 text-blue-500'>設定画面へ</Link>
         </div>
     );
 };
