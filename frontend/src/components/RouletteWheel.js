@@ -11,15 +11,25 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
         const ctx = canvas.getContext('2d');
         const { count, type, labels } = sections;
 
-        const width = 300; const height = 300;
-        const centerX = width / 2; const centerY = height / 2; const radius = width / 2 - 20;
+        const width = 330; const height = 330;
+        const centerX = width / 2; const centerY = height / 2; const radius = width / 2 - 30;
         
         canvas.width = width; canvas.height = height;
         // ルーレット描画
         const angle = (2 * Math.PI) / count; // count=8 なら angle = 0.785398163（ラジアン） で 一つの円弧の円周でもある
         const draw = (currentRotation, indicatorAngle) => {
             ctx.clearRect(0, 0, width,  height);
+            // ルーレット台の描画
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius + 30, 0, 2 * Math.PI); // 外枠
+            ctx.fillStyle = 'darkgreen';
+            ctx.fill();
+            ctx.closePath();
+            ctx.strokeStyle = 'darkgreen';
+            // ctx.lineWidth = 5;
+            ctx.stroke();
             ctx.save();
+            // ルーレット本体の描画
             ctx.translate(centerX, centerY);
             ctx.rotate(currentRotation - 0.1 || 0);
             ctx.translate(-centerX, -centerY);
@@ -31,6 +41,7 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.lineWidth = 0.5;
                 ctx.lineTo(centerX, centerY);
                 ctx.fillStyle = colors[i % colors.length] || '#000000';
                 ctx.fill();
@@ -44,7 +55,7 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
                 ctx.translate(type === 'number' ? radius * 0.8 : radius * 0.7, 0);
                 ctx.rotate(Math.PI / 2);
                 ctx.fillStyle = 'white';
-                ctx.font = type == 'number' ? '22px Arial' : '14px Arial';
+                ctx.font = type == 'number' ? '28px Arial' : '14px Arial';
                 ctx.textAlign = "center";
                 ctx.textBaseline = 'middle';
                 const text = type == 'number' ? String(i + 1) : labels[i] || `セクション${i + 1}`;
