@@ -11,6 +11,7 @@
       const [isSpinning, setIsSpinning] = useState(false);
       // const lastProgressRef = useRef(0);
       const lastRotationRef = useRef(0);
+
       useEffect(() => {
           const palette = [
               '#D32F2F', '#388E3C', '#0288D1', '#FBC02D', '#7B1FA2', '#FF4081',
@@ -60,7 +61,7 @@
           }
           const index = Number(data.result);
           if (isNaN(index) || index < 1 || index > sections.count) {
-            setError('無効な結果：', data.result);
+            setError('無効な結果：', index);
             setIsSpinning(false);
             return;
           }
@@ -68,6 +69,7 @@
           // 回転アニメーション
           let start = null;
           const duration = 5000;
+          const overRun = 500;
           const targetRotation = (-(index - 1) * (2 * Math.PI / sections.count)) - (Math.PI / 2) + (spinCounts * Math.PI);
           const sectionAngle = 2 * Math.PI / sections.count;
           // const clickFrequency = sections.count * spinCounts;
@@ -79,7 +81,16 @@
               start = timestamp;
             } 
             const elapsed = timestamp - start;
-            const progress = Math.sin(Math.min(elapsed / duration, 1) ** 0.5 * (Math.PI / 2));
+            let progress = Math.sin(Math.min(elapsed / duration, 1) ** 0.5 * (Math.PI / 2));
+            if (progress >= 1) {
+              progress = 1;
+              if (elapsed - duration > overRun) {
+                setResult(index);
+                setIsSpinning(false);
+                return;
+              }
+
+            }
             const currentRotation = progress * targetRotation;
             setRotation(currentRotation);
             // 回転音（セクション通過に連動）
@@ -92,7 +103,7 @@
             // 回転音（セクション通過ごと）
             if (passedSections > lastPassedSections ) {
               playClickSound();
-              lastRotationRef.current = passedSections * sectionAngle;
+              lastRotationRef.current = currentRotation;
             }
             
             if (progress < 1) {
