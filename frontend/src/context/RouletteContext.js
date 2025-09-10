@@ -47,6 +47,7 @@
       
       const handleSpin = async () => {
         const spinCounts = 16;
+        playClickSound();
         if (isSpinning) return;
         setIsSpinning(true);
         setResult(null);
@@ -89,7 +90,6 @@
                 setIsSpinning(false);
                 return;
               }
-
             }
             const currentRotation = progress * targetRotation;
             setRotation(currentRotation);
