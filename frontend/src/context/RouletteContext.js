@@ -82,7 +82,7 @@
             } 
             const elapsed = timestamp - start;
             let progress = Math.sin(Math.min(elapsed / duration, 1) ** 0.5 * (Math.PI / 2));
-            if (progress >= 1) {
+            if (elapsed > duration) {
               progress = 1;
               if (elapsed - duration > overRun) {
                 setResult(index);
@@ -94,24 +94,15 @@
             const currentRotation = progress * targetRotation;
             setRotation(currentRotation);
             // 回転音（セクション通過に連動）
-            const passedSections = Math.floor(Math.abs(currentRotation) / sectionAngle)
-            // const speedFactor = Math.max(Math.cos(Math.min(elapsed / duration, 1) ** 0.5 * (Math.PI / 2)), 0.1);
-            // const dynamicInterval = baseInterval / (speedFactor + 0.1);
-            // const passedProgress = Math.floor(elapsed / dynamicInterval);
-            const lastPassedSections = Math.floor(lastRotationRef.current / sectionAngle);
+            const passedSections = Math.floor(Math.abs(currentRotation) / sectionAngle);
+            const lastPassedSections = Math.floor(Math.abs(lastRotationRef.current) / sectionAngle);
 
             // 回転音（セクション通過ごと）
             if (passedSections > lastPassedSections ) {
               playClickSound();
               lastRotationRef.current = currentRotation;
             }
-            
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            } else {
-              setResult(index);
-              setIsSpinning(false);
-            }
+            requestAnimationFrame(animate);
           };
           requestAnimationFrame(animate);
         } catch (e) {
