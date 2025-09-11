@@ -1,5 +1,4 @@
 package com.example.roulette;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:3000")
 public class RouletteController {
     private RouletteSettings settings;
-
+    public RouletteController (RouletteSettings settings) {
+        this.settings = settings;
+    }
     @PostMapping("/sections")
     public ResponseEntity<?> setSections(@RequestBody RouletteSettings request) {
         // type判定
