@@ -22,12 +22,12 @@
           setColors(Array(sections.count).fill().map((_, i) => palette[i % palette.length]));
     }, [sections.count]);
       const playClickSound = () => {
-        const audio = new Audio('/sounds/click.mp3');
+        const audio = new Audio('sounds/click.mp3');
         audio.play().catch(e => console.error('音声エラー：', e));
       }
       const handleFormSubmit = async ({ sectionCount, sectionType, labels}) => {
         try {
-          const response = await fetch("http://localhost:8080/api/sections", {
+          const response = await fetch("/roulette/api/sections", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({count: sectionCount, type: sectionType, labels})
@@ -52,7 +52,7 @@
         setIsSpinning(true);
         setResult(null);
         try {
-          const response = await fetch("http://localhost:8080/api/spin", { method: 'GET' });
+          const response = await fetch("/roulette/api/spin", { method: 'GET' });
           const data = await response.json();
           
           if (!response.ok) {
@@ -112,7 +112,7 @@
       };
       const handleReset = async () => {
         try {
-          const response = await fetch("http://localhost:8080/api/reset", {
+          const response = await fetch("/roulette/api/reset", {
             method: "DELETE"
           });
           const data = await response.json();

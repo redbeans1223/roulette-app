@@ -14,7 +14,7 @@
       <RoulettProvider>
         <Routes>
           <Route path="/" element={<SettingsScreen />} />
-          <Route path="/roulette" element={<RouletteScreen />} />
+          <Route path="/play" element={<RouletteScreen />} />
           
         </Routes>
       </RoulettProvider>

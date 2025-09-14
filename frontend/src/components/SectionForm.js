@@ -10,7 +10,7 @@ const SectionForm = ({onSubmit}) => {
         e.preventDefault(); // デフォルトでリロードするのを抑制
         try {
             await onSubmit({ sectionCount, sectionType, labels});
-            navigate('/roulette');
+            navigate('/play');
         } catch (e) {
             console.e('フォーム送信エラー: ', e);
         }
