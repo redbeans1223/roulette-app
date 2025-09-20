@@ -69,7 +69,11 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
                 ctx.translate(centerX, centerY);
                 ctx.rotate(currentRotation - 0.1 || 0);
                 ctx.translate(-centerX, -centerY);
-                ctx.drawImage(boardChacheRef.current, 0, 0);
+                ctx.drawImage(
+                    boardChacheRef.current,
+                    0, 0, boardChacheRef.current.width, boardChacheRef.current.height,
+                    0, 0, width, height
+                );
                 ctx.restore();
             }
             // インジケータの描画
