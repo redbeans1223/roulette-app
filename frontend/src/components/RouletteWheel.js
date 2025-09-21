@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+const CANVAS_SIZE = 330;
+const RIM = 30; // ルーレットの縁の太さ
 
 const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
     const canvasRef = useRef(null);
@@ -8,17 +10,15 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
 
     useEffect(() => {        
         const { count, type, labels } = sections;
-        const width = 330; const height = 330;
-        const centerX = width / 2; const centerY = height / 2; const radius = width / 2 - 30;
-        const offCanvas = document.createElement('canvas');
-        offCanvas.width = radius * 2 + 60; offCanvas.height = radius * 2 + 60;
-        const offCtx = offCanvas.getContext('2d');
-        const offWidth = offCanvas.width / 2; const offHeight = offCanvas.height / 2;
-        const offCenterX = offWidth / 2; const offCenterY = offHeight / 2;
-        // ルーレット描画
+        const off = document.createElement('canvas');
+        off.width = CANVAS_SIZE; off.height = CANVAS_SIZE;
+        const offCtx = off.getContext('2d');
+        const cx = CANVAS_SIZE / 2; const cy = CANVAS_SIZE / 2;
+        const radius = CANVAS_SIZE / 2 - RIM;
         const angle = (2 * Math.PI) / count; // count=8 なら angle = 0.785398163（ラジアン） で 一つの円弧の円周でもある
+        // ルーレット描画
         offCtx.beginPath();
-        offCtx.arc(offCenterX, offCenterY, radius + 30, 0, 2 * Math.PI); // 外枠
+        offCtx.arc(cx, cy, radius + RIM, 0, 2 * Math.PI); // 外枠
         offCtx.fillStyle = 'darkgreen';
         offCtx.fill();
         offCtx.strokeStyle = 'darkgreen';
@@ -28,9 +28,9 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
             const startAngle = i * angle;
             const endAngle = (i + 1) * angle;
             offCtx.beginPath();
-            offCtx.arc(offCenterX, offCenterY, radius, startAngle, endAngle);
+            offCtx.arc(cx, cy, radius, startAngle, endAngle);
             offCtx.lineWidth = 0.5;
-            offCtx.lineTo(offCenterX, offCenterY);
+            offCtx.lineTo(cx, cy);
             offCtx.fillStyle = colors[i % colors.length] || '#000000';
             offCtx.fill();
             offCtx.strokeStyle = 'black';
@@ -38,7 +38,7 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
             
             // ラベル描画
             offCtx.save();
-            offCtx.translate(offCenterX, offCenterY);
+            offCtx.translate(cx, cy);
             offCtx.rotate(startAngle + angle / 2);
             offCtx.translate(type === 'number' ? radius * 0.8 : radius * 0.7, 0);
             offCtx.rotate(Math.PI / 2);
@@ -50,56 +50,63 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
             offCtx.fillText(text, 0, 0);
             offCtx.restore();  
         }
-        boardChacheRef.current = offCanvas; // ルーレット台のキャッシュ
+        boardChacheRef.current = off; // ルーレット台のキャッシュ
     }, [sections, colors]);
     // 毎フレーム描画
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-        const width = canvas.width; const height = canvas.height;
-        const centerX = width / 2; const centerY = height / 2; const radius = width / 2 - 30;
-        
+        // DPR対応
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = CANVAS_SIZE * dpr; canvas.height = CANVAS_SIZE * dpr;
+        canvas.style.width = `${CANVAS_SIZE}px`; canvas.style.height = `${CANVAS_SIZE}px`;
+        const cx = CANVAS_SIZE / 2; const cy = CANVAS_SIZE / 2;
+        const radius = CANVAS_SIZE / 2 - RIM;
+                
         const draw = (currentRotation, indicatorAngle) => {
-            ctx.clearRect(0, 0, width,  height);
-            if (boardChacheRef.current) {
+            ctx.clearRect(0, 0, CANVAS_SIZE,  CANVAS_SIZE);
+            const chache = boardChacheRef.current;
+            if (chache) {
                 ctx.save();
-                ctx.translate(centerX, centerY);
+                ctx.translate(cx, cy);
                 ctx.rotate(currentRotation || 0);
-                ctx.translate(-boardChacheRef.current.width / 2, -boardChacheRef.current.height / 2);
-                ctx.drawImage(boardChacheRef.current,0, 0);
+                // はみ出し防止
+                ctx.drawImage(chache, -chache.width /2, -chache.height /2);
                 ctx.restore();
             }
             // インジケータの描画
             ctx.save();
-            
-            ctx.translate(centerX, centerY - radius -5);
-            ctx.rotate(indicatorAngle);
+            ctx.translate(cx, cy - radius -5);
+            ctx.rotate(indicatorAngle || 0);
+            // 三角形
             ctx.beginPath();
-            ctx.moveTo(-8, -8);
-            ctx.lineTo(8, -8);
-            ctx.lineTo(0, 20);
+            ctx.moveTo(-10, -5);
+            ctx.lineTo(10, -5);
+            ctx.lineTo(0, 22);
             ctx.closePath();
             ctx.fillStyle = "red";
             ctx.fill();
             ctx.strokeStyle = 'gray';
             ctx.stroke();
-            ctx.restore();
 
             // 軸の描画
             ctx.beginPath();
-            ctx.arc(centerX, centerY - radius - 20, 8, 0, 2 * Math.PI);
+            ctx.arc(0, -5, 8, 0, 2 * Math.PI);
             ctx.fillStyle = 'black';
             ctx.fill();
+            ctx.restore();
         };
           
         if (isSpinning) {
             const animate = (timestamp) => {
                 if (!startTimeRef.current) startTimeRef.current = timestamp;
                 const elapsed = timestamp - startTimeRef.current;
-                const progress = Math.sin(Math.min(elapsed / 5000, 1) ** 0.5 * (Math.PI / 2));
-                const rotationSpeed = Math.cos(Math.min(elapsed / 5000, 1) ** 0.5 * (Math.PI / 2));
-                const currentRotation = (rotation || 0) * progress;
-                const indicatorAngle = Math.sin(timestamp / (100 / (rotationSpeed + 0.5))) * 0.15 * (1 - progress);
+                const t = Math.min(elapsed / 5000, 1);
+                const ease = Math.sin(Math.pow(t, 0.5) * (Math.PI / 2)); // easeOutSine
+                const rotationSpeed = Math.cos(Math.pow(t, 0.5) * (Math.PI / 2)); // easeInSine
+                const currentRotation = (rotation || 0) * ease;
+                const indicatorAngle = Math.sin(timestamp / (100 / (rotationSpeed + 0.5))) * 0.15 * (1 - ease);
+                
                 draw(currentRotation, indicatorAngle);
                 animationFrameRef.current = requestAnimationFrame(animate);
             };
