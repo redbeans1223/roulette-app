@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 const RIM = 30; // ルーレットの縁の太さ
 
@@ -125,15 +125,7 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
     }, [sections, colors, rotation, isSpinning, CANVAS_SIZE]);
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <canvas 
-                ref={canvasRef}
-                className="mt-4 mx-auto" 
-                style={{ 
-                    display: 'block',
-                    maxWidth: '100%',
-                    height: 'auto'
-                }}
-            />
+            <canvas ref={canvasRef} />
         </div>
     );
 };
