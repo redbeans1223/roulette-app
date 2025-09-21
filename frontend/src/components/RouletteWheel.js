@@ -60,6 +60,7 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
         const dpr = window.devicePixelRatio || 1;
         canvas.width = CANVAS_SIZE * dpr; canvas.height = CANVAS_SIZE * dpr;
         canvas.style.width = `${CANVAS_SIZE}px`; canvas.style.height = `${CANVAS_SIZE}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // 座標系をDPR対応
         const cx = CANVAS_SIZE / 2; const cy = CANVAS_SIZE / 2;
         const radius = CANVAS_SIZE / 2 - RIM;
                 
