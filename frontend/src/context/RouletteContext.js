@@ -71,10 +71,13 @@
           let start = null;
           const duration = 5000;
           const overRun = 500;
-          const targetRotation = (-(index - 1) * (2 * Math.PI / sections.count)) - (Math.PI / 2) + (spinCounts * Math.PI);
+          const targetRotation = 
+            (-(index - 1) * (2 * Math.PI / sections.count))
+             - (Math.PI / 2)
+             - ((Math.PI / sections.count) / 2)
+             + (spinCounts * 2 * Math.PI);
           const sectionAngle = 2 * Math.PI / sections.count;
-          // const clickFrequency = sections.count * spinCounts;
-          // const baseInterval = duration / clickFrequency; // 音の基本間隔
+          
           lastRotationRef.current = 0;
           playClickSound();
           const animate = (timestamp) => {
