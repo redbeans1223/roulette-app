@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-const CANVAS_SIZE = 330;
+
 const RIM = 30; // ルーレットの縁の太さ
 
 const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
@@ -7,7 +7,7 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
     const animationFrameRef = useRef(null);
     const startTimeRef = useRef(null);
     const boardChacheRef = useRef(null); // ルーレット台のキャッシュ用
-
+    const CANVAS_SIZE = Math.min(window.innerWidth * 0.9, 400); // キャンバスのサイズ
     useEffect(() => {        
         const { count, type, labels } = sections;
         const off = document.createElement('canvas');
