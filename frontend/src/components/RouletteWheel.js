@@ -105,7 +105,7 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
                 const ease = Math.sin(Math.pow(t, 0.5) * (Math.PI / 2)); // easeOutSine
                 const rotationSpeed = Math.cos(Math.pow(t, 0.5) * (Math.PI / 2)); // easeInSine
                 const currentRotation = (rotation || 0) * ease;
-                const indicatorAngle = Math.sin(timestamp / (100 / (rotationSpeed + 0.5))) * 0.15 * (1 - ease);
+                const indicatorAngle = Math.sin(timestamp / (80 / (rotationSpeed + 0.3))) * 0.3 * (1 - Math.pow(t, 1.5)); // インジケータの揺れ
                 
                 draw(currentRotation, indicatorAngle);
                 animationFrameRef.current = requestAnimationFrame(animate);
