@@ -51,7 +51,7 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
             offCtx.restore();  
         }
         boardChacheRef.current = off; // ルーレット台のキャッシュ
-    }, [sections, colors]);
+    }, [sections, colors, CANVAS_SIZE]);
     // 毎フレーム描画
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -121,8 +121,20 @@ const RouletteWheel = ({sections, rotation, colors, isSpinning}) => {
                 cancelAnimationFrame(animationFrameRef.current);
             }
         };
-    }, [sections, colors, rotation, isSpinning]);
-    return <canvas ref={canvasRef} className="mt-4 mx-auto" style={{ display: 'block' }}/>
+    }, [sections, colors, rotation, isSpinning, CANVAS_SIZE]);
+    return (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <canvas 
+                ref={canvasRef}
+                className="mt-4 mx-auto" 
+                style={{ 
+                    display: 'block',
+                    maxWidth: '100%',
+                    height: 'auto'
+                }}
+            />
+        </div>
+    );
 };
 
 export default RouletteWheel;
